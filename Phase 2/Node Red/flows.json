@@ -1,0 +1,820 @@
+[
+    {
+        "id": "5d903d02b896b950",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c8292233865fe02f",
+        "type": "mqtt in",
+        "z": "5d903d02b896b950",
+        "name": "LUX1",
+        "topic": "ENTC-LUX1",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9dbd66eddb5959c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 970,
+        "y": 200,
+        "wires": [
+            [
+                "6927dd6c448861f9"
+            ]
+        ]
+    },
+    {
+        "id": "ee103b6018078490",
+        "type": "mqtt in",
+        "z": "5d903d02b896b950",
+        "name": "LUX2",
+        "topic": "ENTC-LUX2",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9dbd66eddb5959c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 970,
+        "y": 280,
+        "wires": [
+            [
+                "67028ee407b86abd"
+            ]
+        ]
+    },
+    {
+        "id": "6927dd6c448861f9",
+        "type": "change",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "LUX1",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1220,
+        "y": 200,
+        "wires": [
+            [
+                "3fbda5f88df4daf7",
+                "74655bf4d3712e23",
+                "ef2b29c4abc8e143"
+            ]
+        ]
+    },
+    {
+        "id": "67028ee407b86abd",
+        "type": "change",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "LUX2",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1220,
+        "y": 280,
+        "wires": [
+            [
+                "3fbda5f88df4daf7",
+                "74655bf4d3712e23",
+                "dac6377c89defec4"
+            ]
+        ]
+    },
+    {
+        "id": "3fbda5f88df4daf7",
+        "type": "function",
+        "z": "5d903d02b896b950",
+        "name": "Guage Function",
+        "func": "let lux1 = global.get(\"LUX1\");\nlet lux2 = global.get(\"LUX2\");\n\nlet maxlux = Math.max(lux1, lux2);\nlet displaylux;\n\n\nif (maxlux === 0.99748) {\n    displaylux = 1;\n} else {\n    displaylux = maxlux;\n}\n\n\nreturn {\n    payload: displaylux\n};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1520,
+        "y": 340,
+        "wires": [
+            [
+                "72c38cf87680c804",
+                "4a252e3233f7c12f"
+            ]
+        ]
+    },
+    {
+        "id": "72c38cf87680c804",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1740,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4a252e3233f7c12f",
+        "type": "ui_gauge",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "group": "c558c0552ec1c27b",
+        "order": 1,
+        "width": 14,
+        "height": 8,
+        "gtype": "gage",
+        "title": "Light Intensity Gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "0.002",
+        "seg2": "0.46",
+        "diff": false,
+        "className": "",
+        "x": 1780,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "74655bf4d3712e23",
+        "type": "function",
+        "z": "5d903d02b896b950",
+        "name": "Compare",
+        "func": "let lux1 = global.get(\"LUX1\");\nlet lux2 = global.get(\"LUX2\");\n\nlet maxlux = Math.max(lux1, lux2);\n\nlet side;\n\nif (maxlux == lux2) {\n    return {\n        payload : \"Right LDR\"\n    }\n} else {\n    return{\n        payload: \"Left LDR\"\n    }\n    \n        \n}\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1500,
+        "y": 440,
+        "wires": [
+            [
+                "d2539fef61341ab4"
+            ]
+        ]
+    },
+    {
+        "id": "643c34aff0040568",
+        "type": "ui_toast",
+        "z": "5d903d02b896b950",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Right LDR",
+        "x": 2170,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d03b4ce4a20c662c",
+        "type": "ui_toast",
+        "z": "5d903d02b896b950",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Left LDR",
+        "x": 2180,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7dd37768ae664509",
+        "type": "switch",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Right LDR",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Left LDR",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 1910,
+        "y": 420,
+        "wires": [
+            [
+                "643c34aff0040568",
+                "602a08bb3128b80d"
+            ],
+            [
+                "d03b4ce4a20c662c",
+                "4aa3ef74ddd6b717"
+            ]
+        ]
+    },
+    {
+        "id": "4aa3ef74ddd6b717",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2180,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "602a08bb3128b80d",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2160,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "d2539fef61341ab4",
+        "type": "rbe",
+        "z": "5d903d02b896b950",
+        "name": "Non Repeat",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 1710,
+        "y": 440,
+        "wires": [
+            [
+                "7dd37768ae664509"
+            ]
+        ]
+    },
+    {
+        "id": "ef2b29c4abc8e143",
+        "type": "ui_chart",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "group": "c558c0552ec1c27b",
+        "order": 2,
+        "width": 7,
+        "height": 8,
+        "label": "Light Intensity chart (Left)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "cubic",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "5",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1510,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1b479bdbf9fe258e",
+        "type": "mqtt in",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "topic": "ENTC-Humidity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9dbd66eddb5959c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1000,
+        "y": 380,
+        "wires": [
+            [
+                "604efc7cdc857429",
+                "69df7d6d086732fc"
+            ]
+        ]
+    },
+    {
+        "id": "604efc7cdc857429",
+        "type": "ui_gauge",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "group": "343bc7f666e917a4",
+        "order": 1,
+        "width": 5,
+        "height": 8,
+        "gtype": "gage",
+        "title": "Humidity ",
+        "label": "",
+        "format": "{{payload}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#06d0cc",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "50",
+        "diff": false,
+        "className": "",
+        "x": 1240,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "69df7d6d086732fc",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "RTf",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1230,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "705ea2b97c456e17",
+        "type": "mqtt in",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "topic": "ENTC-Temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9dbd66eddb5959c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1010,
+        "y": 460,
+        "wires": [
+            [
+                "8d64448da5b776a8"
+            ]
+        ]
+    },
+    {
+        "id": "8d64448da5b776a8",
+        "type": "ui_gauge",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "group": "343bc7f666e917a4",
+        "order": 2,
+        "width": 6,
+        "height": 8,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "Celcius",
+        "format": "{{payload}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#06d0cc",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "50",
+        "diff": false,
+        "className": "",
+        "x": 1250,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "6565e679a0c3291a",
+        "type": "ui_slider",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "label": "gamma slider",
+        "tooltip": "",
+        "group": "e3c27c17a2c55a55",
+        "order": 1,
+        "width": 11,
+        "height": 3,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "1",
+        "step": "0.001",
+        "className": "",
+        "x": 1740,
+        "y": 640,
+        "wires": [
+            [
+                "7eaaeaf60ebfa3b5",
+                "21a426e2be08cc19"
+            ]
+        ]
+    },
+    {
+        "id": "7eaaeaf60ebfa3b5",
+        "type": "mqtt out",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "topic": "ENTC-SlidingBar",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9dbd66eddb5959c2",
+        "x": 2010,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "03b1f0b4a2b7ff5f",
+        "type": "ui_dropdown",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "333d83afd45c1dec",
+        "order": 1,
+        "width": 11,
+        "height": 2,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Custom",
+                "value": "Medicine1",
+                "type": "str"
+            },
+            {
+                "label": "Tablet A",
+                "value": "Medicine2",
+                "type": "str"
+            },
+            {
+                "label": "Tablet B",
+                "value": "Medicine3",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 1260,
+        "y": 580,
+        "wires": [
+            [
+                "dd7b8c82493513fc",
+                "892aca50695cec63",
+                "0ebce501cceba4f8"
+            ]
+        ]
+    },
+    {
+        "id": "dd7b8c82493513fc",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1520,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "21a426e2be08cc19",
+        "type": "debug",
+        "z": "5d903d02b896b950",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1960,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "892aca50695cec63",
+        "type": "function",
+        "z": "5d903d02b896b950",
+        "name": "Available Slider",
+        "func": "// Get the selected option from the dropdown\nvar selectedOption = msg.payload;\n\n// Define the options for which the slider should be unlocked\nvar unlockOptions = [\"Medicine2\",\"Medicine3\"]; // Add your specific options here\n\n// Check if the selected option is in the unlockOptions array\nif (unlockOptions.includes(selectedOption)) {\n    // If the selected option is in the unlockOptions array, enable the slider\n    msg.enabled = true;\n} else {\n    // If the selected option is not in the unlockOptions array, disable the slider\n    msg.enabled = false;\n    msg.payload = 0.75;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1520,
+        "y": 660,
+        "wires": [
+            [
+                "6565e679a0c3291a"
+            ]
+        ]
+    },
+    {
+        "id": "69b3bdd682786b9c",
+        "type": "ui_slider",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "label": "offset slider",
+        "tooltip": "",
+        "group": "e3c27c17a2c55a55",
+        "order": 2,
+        "width": 11,
+        "height": 3,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "120",
+        "step": "1",
+        "className": "",
+        "x": 1730,
+        "y": 540,
+        "wires": [
+            [
+                "fc0d7054dec2abdc"
+            ]
+        ]
+    },
+    {
+        "id": "fc0d7054dec2abdc",
+        "type": "mqtt out",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "topic": "ENTC-OffsetTheta",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9dbd66eddb5959c2",
+        "x": 1930,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "0ebce501cceba4f8",
+        "type": "function",
+        "z": "5d903d02b896b950",
+        "name": "Available slider",
+        "func": "// Get the selected option from the dropdown\nvar selectedOption = msg.payload;\n\n// Define the options for which the slider should be unlocked\nvar unlockOptions = [\"Medicine2\",\"Medicine3\"]; // Add your specific options here\n\n// Check if the selected option is in the unlockOptions array\nif (unlockOptions.includes(selectedOption)) {\n    // If the selected option is in the unlockOptions array, enable the slider\n    msg.enabled = true;\n} else {\n    // If the selected option is not in the unlockOptions array, disable the slider\n    msg.enabled = false;\n    msg.payload = 30;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1520,
+        "y": 540,
+        "wires": [
+            [
+                "69b3bdd682786b9c"
+            ]
+        ]
+    },
+    {
+        "id": "dac6377c89defec4",
+        "type": "ui_chart",
+        "z": "5d903d02b896b950",
+        "name": "",
+        "group": "c558c0552ec1c27b",
+        "order": 3,
+        "width": 7,
+        "height": 8,
+        "label": "Light Intensity chart (Right)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "cubic",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "5",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1500,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9dbd66eddb5959c2",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "https://test.mosquitto.org",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c558c0552ec1c27b",
+        "type": "ui_group",
+        "name": "Light Intensity",
+        "tab": "b8115405eaed567d",
+        "order": 2,
+        "disp": true,
+        "width": 14,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "343bc7f666e917a4",
+        "type": "ui_group",
+        "name": "Temperature and Humidity",
+        "tab": "b8115405eaed567d",
+        "order": 3,
+        "disp": true,
+        "width": 11,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e3c27c17a2c55a55",
+        "type": "ui_group",
+        "name": "Shade Controller",
+        "tab": "b8115405eaed567d",
+        "order": 4,
+        "disp": true,
+        "width": 11,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "333d83afd45c1dec",
+        "type": "ui_group",
+        "name": "Select Medicine",
+        "tab": "b8115405eaed567d",
+        "order": 1,
+        "disp": true,
+        "width": 11,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b8115405eaed567d",
+        "type": "ui_tab",
+        "name": "Medibox",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
